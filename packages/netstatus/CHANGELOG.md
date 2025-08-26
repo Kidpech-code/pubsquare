@@ -1,3 +1,13 @@
+## 0.1.1
+
+### Improvements
+
+- Added comprehensive dartdoc for public API (enums, config fields, service methods) to improve pub score and developer experience.
+- Fixed dangling library doc by adding `library netstatus;` and top-level docs on the public export.
+- Updated `issue_tracker` in pubspec to a reachable URL.
+
+No runtime behavior changes; API remains backward compatible.
+
 ## 0.1.0
 
 **Initial Release**

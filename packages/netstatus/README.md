@@ -28,7 +28,7 @@ Add to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  netstatus: ^0.1.0
+  netstatus: ^0.1.1
 ```
 
 Basic usage:
