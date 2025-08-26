@@ -1,0 +1,17 @@
+# Exclude build and tooling artifacts from the published package
+
+.dart_tool/
+build/
+.github/
+.idea/
+\*.iml
+.vscode/
+
+# Example build artifacts
+
+example/.dart_tool/
+example/build/
+
+# MacOS Finder files
+
+.DS_Store
