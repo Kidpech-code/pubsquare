@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  analyze-and-test:
+    name: analyze + test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Pub get (package)
+        working-directory: packages/netstatus
+        run: flutter pub get
+
+      - name: Pub get (example)
+        working-directory: packages/netstatus/example
+        run: flutter pub get
+
+      - name: Format check
+        working-directory: packages/netstatus
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        working-directory: packages/netstatus
+        run: dart analyze --fatal-infos --fatal-warnings
+
+      - name: Test
+        working-directory: packages/netstatus
+        run: flutter test -r expanded

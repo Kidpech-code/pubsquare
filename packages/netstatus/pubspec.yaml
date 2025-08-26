@@ -1,0 +1,33 @@
+name: netstatus
+description: "Unified network + real internet status Stream with configurable checks, multi-platform, pure Dart Streams."
+version: 0.1.0
+homepage: https://pub.dev/packages/netstatus
+repository: https://github.com/yourname/netstatus
+issue_tracker: https://github.com/yourname/netstatus/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+dependencies:
+  flutter:
+    sdk: flutter
+  connectivity_plus: ^6.0.5
+  http: ^1.2.2
+  meta: ^1.16.0
+  web: ^1.1.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
