@@ -1,3 +1,9 @@
+## 0.1.2
+
+### Fixes
+
+- Applied `dart format` to align with pub.dev formatter checks (no functional changes).
+
 ## 0.1.1
 
 ### Improvements

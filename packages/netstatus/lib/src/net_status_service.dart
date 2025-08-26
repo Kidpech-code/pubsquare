@@ -2,8 +2,10 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
-import 'dns_fallback_stub.dart' if (dart.library.io) 'dns_fallback_io.dart' as dns;
-import 'image_ping_stub.dart' if (dart.library.html) 'image_ping_web.dart' as webping;
+import 'dns_fallback_stub.dart' if (dart.library.io) 'dns_fallback_io.dart'
+    as dns;
+import 'image_ping_stub.dart' if (dart.library.html) 'image_ping_web.dart'
+    as webping;
 
 /// Overall network status combining link presence and true Internet reachability.
 ///
@@ -41,14 +43,16 @@ class NetCheckConfig {
   /// If false, treat mobile networks as [NetStatus.networkOnly] for policy reasons.
   final bool allowMobile; // if false, treat mobile as networkOnly
   /// On Web, leverage navigator.onLine hints via connectivity_plus.
-  final bool enableWebNavigatorOnline; // web hint (handled by connectivity_plus under the hood)
+  final bool
+      enableWebNavigatorOnline; // web hint (handled by connectivity_plus under the hood)
   /// Inclusive lower bound for accepted HTTP status codes (default 200).
   final int expectedStatusLowerBound; // default 200
   /// Inclusive upper bound for accepted HTTP status codes (default 299).
   final int expectedStatusUpperBound; // default 399
   /// Optional substring that must appear in the response body.
   /// Useful to guard against captive portals returning 2xx with HTML login pages.
-  final String? expectedBodyContains; // optional body substring to assert real internet (captive portal guard)
+  final String?
+      expectedBodyContains; // optional body substring to assert real internet (captive portal guard)
   /// Max bytes to read from the body when [expectedBodyContains] is used.
   final int maxBodyBytes; // limit body bytes to read when checking body
   /// Factory for a custom HTTP client (testing or proxying).
@@ -56,7 +60,8 @@ class NetCheckConfig {
   /// Emit [NetStatus.networkOnly] immediately before HTTP checks complete.
   final bool emitNetworkOnlyBeforePing; // fast UI feedback
   /// Enable periodic rechecks even when connectivity signals don't change.
-  final bool enablePeriodicRecheck; // optional periodic recheck when network present
+  final bool
+      enablePeriodicRecheck; // optional periodic recheck when network present
   /// Interval for periodic rechecks.
   final Duration periodicInterval; // periodic recheck interval
   /// Attempt DNS lookups if HTTP checks fail.
@@ -68,11 +73,14 @@ class NetCheckConfig {
   /// Exponential backoff multiplier (>1.0) applied to [retryDelay].
   final double? retryBackoffMultiplier; // exponential backoff multiplier
   /// If true, successful DNS-only checks count as Internet; else remain networkOnly.
-  final bool dnsSuccessIsInternet; // if true, DNS-only success counts as Internet; else stays networkOnly
+  final bool
+      dnsSuccessIsInternet; // if true, DNS-only success counts as Internet; else stays networkOnly
   /// Optional lightweight logging hook.
-  final void Function(String message)? onLog; // optional lightweight logging hook
+  final void Function(String message)?
+      onLog; // optional lightweight logging hook
   /// Optional error hook capturing exceptions during checks.
-  final void Function(Object error, StackTrace stack)? onError; // optional error hook
+  final void Function(Object error, StackTrace stack)?
+      onError; // optional error hook
 
   /// Creates a [NetCheckConfig]. Most fields have sensible defaults.
   NetCheckConfig({
@@ -139,11 +147,14 @@ class NetStatusService {
 
   Future<void> _start() async {
     // connectivity_plus on web already leverages navigator.onLine; we keep a single code path.
-    final stream = _customConnectivityStream ?? _connectivity.onConnectivityChanged;
+    final stream =
+        _customConnectivityStream ?? _connectivity.onConnectivityChanged;
     _connectivitySub = stream.listen((results) {
       _onConnectivityChanged(results);
     });
-    final initial = await (_customConnectivityCheck != null ? _customConnectivityCheck!() : _connectivity.checkConnectivity());
+    final initial = await (_customConnectivityCheck != null
+        ? _customConnectivityCheck!()
+        : _connectivity.checkConnectivity());
     // Kick an initial evaluation (forced, bypass throttle at startup).
     unawaited(_onConnectivityChanged(initial, forced: true));
 
@@ -152,13 +163,16 @@ class NetStatusService {
       _periodicTimer?.cancel();
       _periodicTimer = Timer.periodic(config.periodicInterval, (_) async {
         if (_disposed) return;
-        final r = await (_customConnectivityCheck != null ? _customConnectivityCheck!() : _connectivity.checkConnectivity());
+        final r = await (_customConnectivityCheck != null
+            ? _customConnectivityCheck!()
+            : _connectivity.checkConnectivity());
         await _onConnectivityChanged(r, forced: true);
       });
     }
   }
 
-  Future<void> _onConnectivityChanged(List<ConnectivityResult> results, {bool forced = false}) async {
+  Future<void> _onConnectivityChanged(List<ConnectivityResult> results,
+      {bool forced = false}) async {
     if (_disposed) return;
 
     // Throttle pinging to save battery/data.
@@ -174,7 +188,9 @@ class NetStatusService {
             _trailingRequested = false;
             // Fetch fresh connectivity snapshot for trailing recheck
             Future(() async {
-              final r = await (_customConnectivityCheck != null ? _customConnectivityCheck!() : _connectivity.checkConnectivity());
+              final r = await (_customConnectivityCheck != null
+                  ? _customConnectivityCheck!()
+                  : _connectivity.checkConnectivity());
               unawaited(_onConnectivityChanged(r, forced: true));
             });
           }
@@ -210,19 +226,24 @@ class NetStatusService {
 
   /// Forces an immediate evaluation and returns the resulting [NetStatus].
   Future<NetStatus> checkNow() async {
-    final r = await (_customConnectivityCheck != null ? _customConnectivityCheck!() : _connectivity.checkConnectivity());
+    final r = await (_customConnectivityCheck != null
+        ? _customConnectivityCheck!()
+        : _connectivity.checkConnectivity());
     await _onConnectivityChanged(r, forced: true);
     return _lastStatus ?? NetStatus.noNetwork;
   }
 
   /// Returns the current [NetType] based on connectivity signals.
   Future<NetType> getCurrentNetType() async {
-    final r = await (_customConnectivityCheck != null ? _customConnectivityCheck!() : _connectivity.checkConnectivity());
+    final r = await (_customConnectivityCheck != null
+        ? _customConnectivityCheck!()
+        : _connectivity.checkConnectivity());
     return _pickNetType(r);
   }
 
   bool _isNoNetwork(List<ConnectivityResult> results) {
-    return results.isEmpty || (results.length == 1 && results.first == ConnectivityResult.none);
+    return results.isEmpty ||
+        (results.length == 1 && results.first == ConnectivityResult.none);
   }
 
   NetType _pickNetType(List<ConnectivityResult> results) {
@@ -238,7 +259,9 @@ class NetStatusService {
     config.onLog?.call('[netstatus] check start');
     // Attempt with retry (single client per check for efficiency)
     final client = (config.httpClientFactory ?? () => http.Client())();
-    final urls = (config.pingUrls != null && config.pingUrls!.isNotEmpty) ? config.pingUrls! : <Uri>[config.pingUrl];
+    final urls = (config.pingUrls != null && config.pingUrls!.isNotEmpty)
+        ? config.pingUrls!
+        : <Uri>[config.pingUrl];
     try {
       var delay = config.retryDelay;
       for (var attempt = 0; attempt <= config.retry; attempt++) {
@@ -246,15 +269,18 @@ class NetStatusService {
           // Try each URL in order for this attempt; short-circuit when any succeeds.
           for (final url in urls) {
             // First try configured method
-            final ok = await _tryPing(client, method: config.pingMethod, url: url);
+            final ok =
+                await _tryPing(client, method: config.pingMethod, url: url);
             if (ok == true) {
-              config.onLog?.call('[netstatus] HTTP OK via ${config.pingMethod} $url');
+              config.onLog
+                  ?.call('[netstatus] HTTP OK via ${config.pingMethod} $url');
               return true;
             }
 
             // If HEAD is configured and failed (e.g., 405/501), try GET fallback once per URL
             if (config.pingMethod.toUpperCase() == 'HEAD') {
-              final fallbackOk = await _tryPing(client, method: 'GET', url: url);
+              final fallbackOk =
+                  await _tryPing(client, method: 'GET', url: url);
               if (fallbackOk == true) {
                 config.onLog?.call('[netstatus] GET fallback OK $url');
                 return true;
@@ -273,8 +299,10 @@ class NetStatusService {
         }
         if (attempt < config.retry) {
           await Future.delayed(delay);
-          if (config.retryBackoffMultiplier != null && config.retryBackoffMultiplier! > 1.0) {
-            final nextMs = (delay.inMilliseconds * config.retryBackoffMultiplier!).toInt();
+          if (config.retryBackoffMultiplier != null &&
+              config.retryBackoffMultiplier! > 1.0) {
+            final nextMs =
+                (delay.inMilliseconds * config.retryBackoffMultiplier!).toInt();
             delay = Duration(milliseconds: nextMs.clamp(1, 60000));
           }
         }
@@ -287,7 +315,8 @@ class NetStatusService {
       try {
         final ok = await dns.performDnsLookup(config.dnsHosts, config.timeout);
         if (ok) {
-          config.onLog?.call('[netstatus] DNS fallback ${config.dnsHosts} => ${config.dnsSuccessIsInternet ? 'internet' : 'networkOnly'}');
+          config.onLog?.call(
+              '[netstatus] DNS fallback ${config.dnsHosts} => ${config.dnsSuccessIsInternet ? 'internet' : 'networkOnly'}');
           if (config.dnsSuccessIsInternet) return true;
         }
       } catch (_) {}
@@ -301,7 +330,8 @@ class NetStatusService {
   /// Timestamp of the last check.
   DateTime get lastCheckTime => _lastCheck;
 
-  Future<bool> _tryPing(http.Client client, {required String method, required Uri url}) async {
+  Future<bool> _tryPing(http.Client client,
+      {required String method, required Uri url}) async {
     final req = http.Request(method.toUpperCase(), url);
     req.headers.addAll(<String, String>{
       'Cache-Control': 'no-cache',
@@ -310,7 +340,8 @@ class NetStatusService {
     });
     final res = await client.send(req).timeout(config.timeout);
     final status = res.statusCode;
-    final statusOk = status >= config.expectedStatusLowerBound && status <= config.expectedStatusUpperBound;
+    final statusOk = status >= config.expectedStatusLowerBound &&
+        status <= config.expectedStatusUpperBound;
     if (!statusOk) return false;
 
     // If body content is required (captive portal guard), sample up to maxBodyBytes
@@ -347,4 +378,5 @@ class NetStatusService {
 }
 
 // Defaults and helpers
-final Uri _kDefaultPingUrl = Uri.parse('https://clients3.google.com/generate_204');
+final Uri _kDefaultPingUrl =
+    Uri.parse('https://clients3.google.com/generate_204');

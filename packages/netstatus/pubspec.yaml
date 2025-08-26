@@ -1,6 +1,6 @@
 name: netstatus
 description: "Unified network + real internet status Stream with configurable checks, multi-platform, pure Dart Streams."
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/Kidpech-code/pubsquare/
 repository: https://github.com/Kidpech-code/pubsquare/
 issue_tracker: https://github.com/Kidpech-code/pubsquare
