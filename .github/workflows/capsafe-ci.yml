@@ -1,0 +1,86 @@
+name: capsafe-ci
+
+on:
+  push:
+    paths:
+      - "packages/capsafe/**"
+      - ".github/workflows/capsafe-ci.yml"
+  pull_request:
+    paths:
+      - "packages/capsafe/**"
+  workflow_dispatch:
+    inputs:
+      run_integration_ios:
+        description: "Run iOS integration tests (requires macOS runner and Simulator)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  unit:
+    name: Analyze and unit tests (Flutter stable)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/capsafe
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Unit tests
+        run: flutter test --reporter expanded
+
+  integration_ios:
+    name: iOS integration tests (optional)
+    needs: unit
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_integration_ios == true }}
+    runs-on: macos-latest
+    env:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Pub get (example)
+        working-directory: packages/capsafe/example
+        run: flutter pub get
+
+      - name: Install CocoaPods
+        working-directory: packages/capsafe/example/ios
+        run: pod install
+
+      - name: Boot iOS Simulator
+        run: |
+          set -e
+          xcrun simctl list devices available
+          # Try to boot a common device; ignore failure if already booted
+          xcrun simctl boot "iPhone 14" || true
+          # Wait for boot
+          xcrun simctl bootstatus booted -b || true
+
+      - name: List Flutter devices
+        run: flutter devices
+
+      - name: Run integration test on iOS Simulator
+        working-directory: packages/capsafe/example
+        run: flutter test integration_test/sensitive_area_test.dart -d "iPhone 14"
