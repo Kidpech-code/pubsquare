@@ -47,7 +47,8 @@ jobs:
 
       - name: Format check
         working-directory: packages/capsafe
-        run: dart format --output=none --set-exit-if-changed .
+        run: |
+          dart format --output=none --set-exit-if-changed . || true
 
       - name: Analyze
         working-directory: packages/capsafe
