@@ -1,7 +1,9 @@
 name: capsafe
-description: "DDD-based screen protection plugin: Android true-block + iOS detect/overlay (full or partial), UX messaging, and store-compliant behavior."
+description: "screen protection plugin: Android true-block + iOS detect/overlay (full or partial), UX messaging, and store-compliant behavior."
 version: 0.1.0
-homepage: https://github.com/Kidpech-code/capsafe
+homepage: https://github.com/Kidpech-code/pubsquare/
+repository: https://github.com/Kidpech-code/pubsquare/
+issue_tracker: https://github.com/Kidpech-code/pubsquare
 
 environment:
   sdk: ">=3.3.0 <4.0.0"

@@ -1,5 +1,7 @@
 # capsafe (DDD)
 
+![pub package](https://img.shields.io/pub/v/capsafe?label=pub.dev&color=blue)
+
 A Flutter plugin to protect sensitive content on Android and iOS with a strong DDD architecture.
 
 - Android: True blocking via FLAG_SECURE (route-scoped with safe ref-count and no flicker).
