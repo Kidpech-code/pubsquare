@@ -1,27 +1,43 @@
-# capsafe (DDD)
+1. **License Section:** The "License" heading is missing a markdown header (`## License`).
+2. **Overlay Modes Section:** Consider using a subheading for clarity.
+3. **Store Policy Compliance:** Use a subheading for better structure.
+4. **Localization Section:** Use a subheading for consistency.
+5. **Duplicate Heading:** The second `# capsafe` and "Getting Started" section are boilerplate from Flutter and can be removed, as the earlier sections already cover usage and installation.
+
+```markdown
+# capsafe 
 
 ![pub package](https://img.shields.io/pub/v/capsafe?label=pub.dev&color=blue)
 
 A Flutter plugin to protect sensitive content on Android and iOS with a strong DDD architecture.
 
-- Android: True blocking via FLAG_SECURE (route-scoped with safe ref-count and no flicker).
-- iOS: Platform cannot block screenshots; capsafe detects (screenshot + isCaptured), shows configurable overlays (full-screen or partial via SensitiveArea), and hides App Switcher snapshots. Fully App Store–compliant, using only public APIs.
+- **Android:** True blocking via `FLAG_SECURE` (route-scoped with safe ref-count and no flicker).
+- **iOS:** Platform cannot block screenshots; capsafe detects (screenshot + isCaptured), shows configurable overlays (full-screen or partial via `SensitiveArea`), and hides App Switcher snapshots. Fully App Store–compliant, using only public APIs.
 
-Why capsafe
+## Why capsafe
 
-- Route-scoped protection: Enable per-screen with SecureScope.
-- Ref-count stabilization: Safe toggling when multiple widgets/flows overlap.
-- UX-first: Built-in banner to explain “why” once; localizable.
-- Overlay modes (iOS): full-screen, partial (SensitiveArea only), or none.
-- Telemetry hooks: Observe screenshot/capture events (no network dependency).
-- Clean layering (DDD): Testable domain/services, swappable infrastructure adapters.
+- **Route-scoped protection:** Enable per-screen with `SecureScope`.
+- **Ref-count stabilization:** Safe toggling when multiple widgets/flows overlap.
+- **UX-first:** Built-in banner to explain “why” once; localizable.
+- **Overlay modes (iOS):** full-screen, partial (`SensitiveArea` only), or none.
+- **Telemetry hooks:** Observe screenshot/capture events (no network dependency).
+- **Clean layering:** Testable domain/services, swappable infrastructure adapters.
 
-Limitations
+## Limitations
 
 - iOS cannot truly block screenshots. capsafe focuses on detection and user-friendly mitigation (overlay, messaging, snapshot privacy).
 - Hardware cameras can always capture content.
 
-Quick Start
+## Install
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  capsafe: ^<latest_version>
+```
+
+## Quick Start
 
 ```dart
 import 'package:capsafe/capsafe.dart';
@@ -78,26 +94,27 @@ class SecurePage extends StatelessWidget {
 }
 ```
 
-Overlay modes (iOS)
+## Overlay Modes (iOS)
 
-- full: full-screen overlay while screen is being captured (UIScreen.isCaptured)
-- partial: only widgets wrapped by SensitiveArea are masked (recommended for better UX)
-- none: no overlay; rely on messaging/telemetry only
+- **full:** Full-screen overlay while screen is being captured (`UIScreen.isCaptured`)
+- **partial:** Only widgets wrapped by `SensitiveArea` are masked (recommended for better UX)
+- **none:** No overlay; rely on messaging/telemetry only
 
-Store policy compliance
+## Store Policy Compliance
 
-- iOS: Do not mimic/replace system’s screenshot UI; use only public notifications.
-- Android: Provide policy to allow temporary screen sharing in legitimate flows.
-- Accessibility: overlays are non-interactive; banners readable; keep contrast good.
+- **iOS:** Do not mimic/replace system’s screenshot UI; use only public notifications.
+- **Android:** Provide policy to allow temporary screen sharing in legitimate flows.
+- **Accessibility:** Overlays are non-interactive; banners readable; keep contrast good.
 
-License
+## License
+
 MIT
 
-Localization
+## Localization
 
 You can localize the UX banner text using your app’s ARB-generated localizations. Provide a `localizationBuilder` that maps the current context to a `UxCopy`.
 
-```
+```dart
 await Capsafe.instance.configure(
   ScreenshotBlockerConfig(
     ux: UxMessagingConfig(
@@ -113,18 +130,10 @@ await Capsafe.instance.configure(
   ),
 );
 ```
+```
 
-# capsafe
-
-A new Flutter plugin project.
-
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Summary:
+- The markdown is correct and clear.
+- Minor improvements are suggested for structure and clarity.
+- Remove duplicate/boilerplate sections at the end.
+- Add missing subheadings for better navigation.

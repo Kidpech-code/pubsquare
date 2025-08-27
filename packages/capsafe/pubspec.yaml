@@ -1,6 +1,6 @@
 name: capsafe
 description: "screen protection plugin: Android true-block + iOS detect/overlay (full or partial), UX messaging, and store-compliant behavior."
-version: 0.1.0
+version: 0.1.2
 homepage: https://github.com/Kidpech-code/pubsquare/
 repository: https://github.com/Kidpech-code/pubsquare/
 issue_tracker: https://github.com/Kidpech-code/pubsquare
