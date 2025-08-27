@@ -1,8 +1,8 @@
-1. **License Section:** The "License" heading is missing a markdown header (`## License`).
+<!-- 1. **License Section:** The "License" heading is missing a markdown header (`## License`).
 2. **Overlay Modes Section:** Consider using a subheading for clarity.
 3. **Store Policy Compliance:** Use a subheading for better structure.
 4. **Localization Section:** Use a subheading for consistency.
-5. **Duplicate Heading:** The second `# capsafe` and "Getting Started" section are boilerplate from Flutter and can be removed, as the earlier sections already cover usage and installation.
+5. **Duplicate Heading:** The second `# capsafe` and "Getting Started" section are boilerplate from Flutter and can be removed, as the earlier sections already cover usage and installation. -->
 
 ```markdown
 # capsafe 
