@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Update License
+
 ## 0.1.2
 
 * Update: workflow now ignores format check failure, and version bump for publish tag match.
